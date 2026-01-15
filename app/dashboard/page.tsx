@@ -211,7 +211,7 @@ export default async function DashboardPage() {
                 <input 
                   type="number" 
                   name="minutes" 
-                  placeholder="min"
+                  placeholder="mins"
                   defaultValue={1}
                   min={1}
                   className="w-20 px-3 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-center text-[var(--foreground)] focus:border-[var(--accent-warning)]"
@@ -290,7 +290,7 @@ export default async function DashboardPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold">AI Assistant</h2>
+            <h2 className="text-lg font-semibold">🐂 Nineteen58 AI Agent</h2>
             <span className="text-xs px-2 py-1 rounded-full bg-[var(--accent-secondary)]/20 text-[var(--accent-secondary)] font-medium">
               Powered by GPT
             </span>

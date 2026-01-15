@@ -26,7 +26,7 @@ export function Chat() {
             <div
               className={`max-w-[80%] px-4 py-3 rounded-2xl ${
                 message.role === 'user'
-                  ? 'bg-gradient-to-r from-[var(--accent-secondary)] to-purple-500 text-white rounded-br-md'
+                  ? 'bg-[#7c3aed] text-white rounded-br-md'
                   : 'bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] rounded-bl-md'
               }`}
             >
