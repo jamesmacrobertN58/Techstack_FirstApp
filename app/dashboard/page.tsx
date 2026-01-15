@@ -2,7 +2,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { addTodo } from '@/app/actions/todos'
+import { addTodo, toggleTodoStatus } from '@/app/actions/todos'
+import { toggleReminderStatus } from '@/app/actions/reminders'
 import { Chat } from '@/app/components/chat'
 
 export default async function DashboardPage() {
@@ -61,10 +62,29 @@ export default async function DashboardPage() {
           <p className="text-gray-500">No tasks yet. Add one above!</p>
         )}
         {todos?.map((todo) => (
-          <div key={todo.id} className="p-4 border rounded-lg mb-2 flex justify-between">
-            <span>{todo.task}</span>
-            <span className="text-sm text-gray-500">{todo.status}</span>
-          </div>
+          <form 
+            key={todo.id} 
+            action={async () => {
+              'use server'
+              await toggleTodoStatus(todo.id, todo.status)
+            }}
+          >
+            <button 
+              type="submit"
+              className={`w-full p-4 border rounded-lg mb-2 flex justify-between text-left cursor-pointer hover:bg-gray-50 transition ${
+                todo.status === 'completed' ? 'bg-green-50 line-through text-gray-400' : ''
+              }`}
+            >
+              <span>{todo.task}</span>
+              <span className={`text-sm px-2 py-1 rounded ${
+                todo.status === 'completed' 
+                  ? 'bg-green-100 text-green-700' 
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                {todo.status}
+              </span>
+            </button>
+          </form>
         ))}
       </div>
 
@@ -110,16 +130,31 @@ export default async function DashboardPage() {
           <p className="text-gray-500">No reminders set.</p>
         )}
         {reminders?.map((reminder) => (
-          <div key={reminder.id} className="p-4 border rounded-lg mb-2 flex justify-between items-center">
-            <span>{reminder.message}</span>
-            <span className={`text-sm px-2 py-1 rounded ${
-              reminder.status === 'fired' 
-                ? 'bg-green-100 text-green-700' 
-                : 'bg-yellow-100 text-yellow-700'
-            }`}>
-              {reminder.status}
-            </span>
-          </div>
+          <form 
+            key={reminder.id}
+            action={async () => {
+              'use server'
+              await toggleReminderStatus(reminder.id, reminder.status)
+            }}
+          >
+            <button 
+              type="submit"
+              className={`w-full p-4 border rounded-lg mb-2 flex justify-between items-center text-left cursor-pointer hover:bg-gray-50 transition ${
+                reminder.status === 'completed' ? 'bg-green-50 line-through text-gray-400' : ''
+              }`}
+            >
+              <span>{reminder.message}</span>
+              <span className={`text-sm px-2 py-1 rounded ${
+                reminder.status === 'completed' 
+                  ? 'bg-green-100 text-green-700' 
+                  : reminder.status === 'fired'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'bg-yellow-100 text-yellow-700'
+              }`}>
+                {reminder.status}
+              </span>
+            </button>
+          </form>
         ))}
       </div>
 

@@ -28,3 +28,27 @@ export async function addTodo(task: string) {
 
   revalidatePath('/dashboard')
 }
+
+export async function toggleTodoStatus(todoId: number, currentStatus: string) {
+  const { userId } = await auth()
+  
+  if (!userId) {
+    throw new Error('Not authenticated')
+  }
+
+  const supabase = await createClient()
+  
+  const newStatus = currentStatus === 'completed' ? 'pending' : 'completed'
+  
+  const { error } = await supabase
+    .from('todos')
+    .update({ status: newStatus })
+    .eq('id', todoId)
+    .eq('user_id', userId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  revalidatePath('/dashboard')
+}
