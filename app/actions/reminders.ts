@@ -3,7 +3,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { tasks } from "@trigger.dev/sdk/v3"
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'  // Add this line
+import { revalidatePath } from 'next/cache'
+import { addToGoogleCalendar } from '@/lib/google/calendar'
 import type { sendReminder } from "@/src/trigger/reminders"
 
 export async function createReminder(message: string, delayMinutes: number) {
@@ -43,12 +44,26 @@ export async function createReminder(message: string, delayMinutes: number) {
     delayMinutes,
   })
 
+  // Add to Google Calendar (optional - won't fail if not connected)
+  let calendarEvent = null
+  try {
+    calendarEvent = await addToGoogleCalendar({
+      title: `🔔 Reminder: ${message}`,
+      description: `Reminder set from Nineteen58`,
+      startTime: fireAt,
+    })
+  } catch (calendarError) {
+    console.log('Google Calendar not connected or error:', calendarError)
+    // Continue without failing - calendar is optional
+  }
+
   revalidatePath('/dashboard')
   
   return { 
     success: true, 
     taskId: handle.id,
-    reminderId: reminder.id
+    reminderId: reminder.id,
+    calendarEventId: calendarEvent?.eventId
   }
 }
 
@@ -91,12 +106,26 @@ export async function createReminderByDate(message: string, dateTime: string) {
     delayMinutes,
   })
 
+  // Add to Google Calendar (optional - won't fail if not connected)
+  let calendarEvent = null
+  try {
+    calendarEvent = await addToGoogleCalendar({
+      title: `🔔 Reminder: ${message}`,
+      description: `Reminder set from Nineteen58`,
+      startTime: fireAt,
+    })
+  } catch (calendarError) {
+    console.log('Google Calendar not connected or error:', calendarError)
+    // Continue without failing - calendar is optional
+  }
+
   revalidatePath('/dashboard')
 
   return { 
     success: true, 
     taskId: handle.id,
-    reminderId: reminder.id
+    reminderId: reminder.id,
+    calendarEventId: calendarEvent?.eventId
   }
 }
 

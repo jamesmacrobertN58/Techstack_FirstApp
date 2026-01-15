@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.90.1",
     "@trigger.dev/sdk": "^4.3.2",
     "ai": "^4.0.20",
+    "googleapis": "^170.1.0",
     "jsonwebtoken": "^9.0.3",
     "next": "16.1.2",
     "react": "19.2.3",
