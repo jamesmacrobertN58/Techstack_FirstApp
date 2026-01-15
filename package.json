@@ -9,14 +9,17 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^1.0.5",
     "@clerk/nextjs": "^6.36.7",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.90.1",
     "@trigger.dev/sdk": "^4.3.2",
+    "ai": "^4.0.20",
     "jsonwebtoken": "^9.0.3",
     "next": "16.1.2",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

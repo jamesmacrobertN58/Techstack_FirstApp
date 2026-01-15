@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { addTodo } from '@/app/actions/todos'
+import { Chat } from '@/app/components/chat'
 
 export default async function DashboardPage() {
   const { userId } = await auth()
@@ -93,6 +94,12 @@ export default async function DashboardPage() {
           <span className="text-sm text-gray-500">{todo.status}</span>
         </div>
       ))}
+
+      {/* ADD THIS SECTION */}
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">💬 Nineteen58 AI Agent</h2>
+        <Chat />
+      </div>
     </div>
   )
 }
