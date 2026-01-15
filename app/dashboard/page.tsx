@@ -195,33 +195,33 @@ export default async function DashboardPage() {
             {/* Reminder Form */}
             <form action={async (formData) => {
               'use server'
-              const { createReminder } = await import('@/app/actions/reminders')
+              const { createReminderByDate } = await import('@/app/actions/reminders')
               const message = formData.get('reminder') as string
-              const minutes = parseInt(formData.get('minutes') as string) || 1
-              if (message) await createReminder(message, minutes)
+              const dateTime = formData.get('datetime') as string
+              if (message && dateTime) await createReminderByDate(message, dateTime)
             }} className="mb-5">
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-3">
                 <input 
                   type="text" 
                   name="reminder" 
                   placeholder="Remind me to..."
-                  className="flex-1 px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--foreground)] placeholder-[var(--text-muted)] focus:border-[var(--accent-warning)]"
+                  className="w-full px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--foreground)] placeholder-[var(--text-muted)] focus:border-[var(--accent-warning)]"
                   required
                 />
-                <input 
-                  type="number" 
-                  name="minutes" 
-                  placeholder="mins"
-                  defaultValue={1}
-                  min={1}
-                  className="w-20 px-3 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-center text-[var(--foreground)] focus:border-[var(--accent-warning)]"
-                />
-                <button 
-                  type="submit"
-                  className="px-5 py-3 bg-[#f59e0b] text-black font-semibold rounded-xl hover:bg-[#d97706] hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Set
-                </button>
+                <div className="flex gap-2">
+                  <input 
+                    type="datetime-local" 
+                    name="datetime"
+                    className="flex-1 px-4 py-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-[var(--foreground)] focus:border-[var(--accent-warning)] [color-scheme:dark]"
+                    required
+                  />
+                  <button 
+                    type="submit"
+                    className="px-5 py-3 bg-[#f59e0b] text-black font-semibold rounded-xl hover:bg-[#d97706] hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Set
+                  </button>
+                </div>
               </div>
             </form>
 

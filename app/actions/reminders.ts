@@ -43,6 +43,56 @@ export async function createReminder(message: string, delayMinutes: number) {
     delayMinutes,
   })
 
+  revalidatePath('/dashboard')
+  
+  return { 
+    success: true, 
+    taskId: handle.id,
+    reminderId: reminder.id
+  }
+}
+
+export async function createReminderByDate(message: string, dateTime: string) {
+  const { userId } = await auth()
+  
+  if (!userId) {
+    throw new Error('Not authenticated')
+  }
+
+  const supabase = await createClient()
+  
+  // Parse the datetime and calculate delay in minutes
+  const fireAt = new Date(dateTime)
+  const now = new Date()
+  const delayMinutes = Math.max(1, Math.round((fireAt.getTime() - now.getTime()) / 60000))
+  
+  // Save reminder to Supabase
+  const { data: reminder, error } = await supabase
+    .from('reminders')
+    .insert({
+      user_id: userId,
+      message,
+      delay_minutes: delayMinutes,
+      status: 'pending',
+      fire_at: fireAt.toISOString()
+    })
+    .select()
+    .single()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  // Trigger the background task
+  const handle = await tasks.trigger<typeof sendReminder>("send-reminder", {
+    reminderId: reminder.id,
+    userId,
+    message,
+    delayMinutes,
+  })
+
+  revalidatePath('/dashboard')
+
   return { 
     success: true, 
     taskId: handle.id,
