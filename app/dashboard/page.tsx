@@ -14,26 +14,32 @@ export default async function DashboardPage() {
 
   const supabase = await createClient()
   
-  const { data: todos, error } = await supabase
+  // Fetch todos
+  const { data: todos } = await supabase
     .from('todos')
     .select('*')
     .eq('user_id', userId)
     .order('inserted_at', { ascending: false })
 
-  if (error) {
-    console.error('Error fetching todos:', error)
-  }
+  // Fetch reminders
+  const { data: reminders } = await supabase
+    .from('reminders')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Your Tasks</h1>
+      
+      {/* ===== TASKS SECTION ===== */}
+      <h1 className="text-2xl font-bold mb-4">📋 Your Tasks</h1>
       
       {/* Add Todo Form */}
       <form action={async (formData) => {
         'use server'
         const task = formData.get('task') as string
         if (task) await addTodo(task)
-      }} className="mb-8 flex gap-2">
+      }} className="mb-4 flex gap-2">
         <input 
           type="text" 
           name="task" 
@@ -48,15 +54,31 @@ export default async function DashboardPage() {
           Add
         </button>
       </form>
-{/* Reminder Form */}
-<form action={async (formData) => {
+
+      {/* Todo List */}
+      <div className="mb-8">
+        {todos?.length === 0 && (
+          <p className="text-gray-500">No tasks yet. Add one above!</p>
+        )}
+        {todos?.map((todo) => (
+          <div key={todo.id} className="p-4 border rounded-lg mb-2 flex justify-between">
+            <span>{todo.task}</span>
+            <span className="text-sm text-gray-500">{todo.status}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ===== REMINDERS SECTION ===== */}
+      <h2 className="text-2xl font-bold mb-4">⏰ Reminders</h2>
+      
+      {/* Reminder Form */}
+      <form action={async (formData) => {
         'use server'
         const { createReminder } = await import('@/app/actions/reminders')
         const message = formData.get('reminder') as string
         const minutes = parseInt(formData.get('minutes') as string) || 1
         if (message) await createReminder(message, minutes)
-      }} className="mb-8 p-4 border rounded-lg bg-gray-50">
-        <h2 className="font-semibold mb-3">⏰ Set a Reminder</h2>
+      }} className="mb-4 p-4 border rounded-lg bg-gray-50">
         <div className="flex gap-2">
           <input 
             type="text" 
@@ -82,22 +104,28 @@ export default async function DashboardPage() {
         </div>
       </form>
 
-      {/* ========== END OF NEW SECTION ========== */}
-      {/* Todo List */}
-      {todos?.length === 0 && (
-        <p className="text-gray-500">No tasks yet. Add one above!</p>
-      )}
-      
-      {todos?.map((todo) => (
-        <div key={todo.id} className="p-4 border rounded-lg mb-2 flex justify-between">
-          <span>{todo.task}</span>
-          <span className="text-sm text-gray-500">{todo.status}</span>
-        </div>
-      ))}
+      {/* Reminders List */}
+      <div className="mb-8">
+        {reminders?.length === 0 && (
+          <p className="text-gray-500">No reminders set.</p>
+        )}
+        {reminders?.map((reminder) => (
+          <div key={reminder.id} className="p-4 border rounded-lg mb-2 flex justify-between items-center">
+            <span>{reminder.message}</span>
+            <span className={`text-sm px-2 py-1 rounded ${
+              reminder.status === 'fired' 
+                ? 'bg-green-100 text-green-700' 
+                : 'bg-yellow-100 text-yellow-700'
+            }`}>
+              {reminder.status}
+            </span>
+          </div>
+        ))}
+      </div>
 
-      {/* ADD THIS SECTION */}
+      {/* ===== AI ASSISTANT SECTION ===== */}
       <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">💬 Nineteen58 AI Agent</h2>
+        <h2 className="text-2xl font-bold mb-4">💬 Nineteen58 AI Agent</h2>
         <Chat />
       </div>
     </div>
