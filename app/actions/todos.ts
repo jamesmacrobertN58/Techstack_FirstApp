@@ -18,8 +18,8 @@ export async function addTodo(task: string) {
     .from('todos')
     .insert({
       task,
-      user_id: userId,  // Link to Clerk user
-      status: 'pending'
+      user_id: userId,
+      status: 'incomplete'
     })
 
   if (error) {
@@ -29,7 +29,7 @@ export async function addTodo(task: string) {
   revalidatePath('/dashboard')
 }
 
-export async function toggleTodoStatus(todoId: number, currentStatus: string) {
+export async function toggleTodoStatus(todoId: string, currentStatus: string) {
   const { userId } = await auth()
   
   if (!userId) {
@@ -38,7 +38,7 @@ export async function toggleTodoStatus(todoId: number, currentStatus: string) {
 
   const supabase = await createClient()
   
-  const newStatus = currentStatus === 'completed' ? 'pending' : 'completed'
+  const newStatus = currentStatus === 'completed' ? 'incomplete' : 'completed'
   
   const { error } = await supabase
     .from('todos')

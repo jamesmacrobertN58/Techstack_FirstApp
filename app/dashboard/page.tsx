@@ -32,7 +32,7 @@ export default async function DashboardPage() {
 
   const pendingTasks = todos?.filter(t => t.status !== 'completed').length || 0
   const completedTasks = todos?.filter(t => t.status === 'completed').length || 0
-  const activeReminders = reminders?.filter(r => r.status === 'pending').length || 0
+  const activeReminders = reminders?.filter(r => r.status === 'incomplete').length || 0
 
   return (
     <div className="min-h-screen gradient-bg">
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
               </div>
               <div>
                 <p className="text-3xl font-bold text-[var(--accent-primary)]">{pendingTasks}</p>
-                <p className="text-sm text-[var(--text-muted)]">Pending Tasks</p>
+                <p className="text-sm text-[var(--text-muted)]">Incomplete Tasks</p>
               </div>
             </div>
           </div>

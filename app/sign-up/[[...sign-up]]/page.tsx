@@ -1,9 +1,9 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignUp } from '@clerk/nextjs'
 
 export default function Page() {
   return (
     <div className="min-h-screen gradient-bg flex items-center justify-center">
-      <SignIn 
+      <SignUp 
         appearance={{
           elements: {
             rootBox: "mx-auto",

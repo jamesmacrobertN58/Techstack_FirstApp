@@ -50,7 +50,7 @@ For event dates, convert to ISO format (YYYY-MM-DDTHH:MM:SS). Assume current yea
               .insert({
                 task,
                 user_id: userId,
-                status: 'pending'
+                status: 'incomplete'
               })
 
             if (error) {
@@ -79,7 +79,7 @@ For event dates, convert to ISO format (YYYY-MM-DDTHH:MM:SS). Assume current yea
                 user_id: userId,
                 message,
                 delay_minutes: delayMinutes,
-                status: 'pending',
+                status: 'incomplete',
                 fire_at: fireAt.toISOString()
               })
               .select()
@@ -127,7 +127,7 @@ For event dates, convert to ISO format (YYYY-MM-DDTHH:MM:SS). Assume current yea
                   user_id: userId,
                   title,
                   event_date: eventDate.toISOString(),
-                  status: 'scheduled'
+                  status: 'incomplete'
                 })
                 .select()
                 .single()

@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 export const sendReminder = task({
   id: "send-reminder",
   run: async (payload: { 
-    reminderId: number;
+    reminderId: string;
     userId: string; 
     message: string; 
     delayMinutes: number 

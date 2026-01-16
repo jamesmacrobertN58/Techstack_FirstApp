@@ -26,7 +26,7 @@ export async function createReminder(message: string, delayMinutes: number) {
       user_id: userId,
       message,
       delay_minutes: delayMinutes,
-      status: 'pending',
+      status: 'incomplete',
       fire_at: fireAt.toISOString()
     })
     .select()
@@ -88,7 +88,7 @@ export async function createReminderByDate(message: string, dateTime: string) {
       user_id: userId,
       message,
       delay_minutes: delayMinutes,
-      status: 'pending',
+      status: 'incomplete',
       fire_at: fireAt.toISOString()
     })
     .select()
@@ -129,7 +129,7 @@ export async function createReminderByDate(message: string, dateTime: string) {
   }
 }
 
-export async function toggleReminderStatus(reminderId: number, currentStatus: string) {
+export async function toggleReminderStatus(reminderId: string, currentStatus: string) {
   const { userId } = await auth()
   
   if (!userId) {
@@ -138,7 +138,7 @@ export async function toggleReminderStatus(reminderId: number, currentStatus: st
 
   const supabase = await createClient()
   
-  const newStatus = currentStatus === 'completed' ? 'pending' : 'completed'
+  const newStatus = currentStatus === 'completed' ? 'incomplete' : 'completed'
   
   const { error } = await supabase
     .from('reminders')

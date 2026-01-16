@@ -22,7 +22,7 @@ export async function createEvent(title: string, eventDate: Date, reminderMinute
       title,
       event_date: eventDate.toISOString(),
       reminder_minutes_before: reminderMinutesBefore,
-      status: 'scheduled'
+      status: 'incomplete'
     })
     .select()
     .single()
